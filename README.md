@@ -1,2 +1,11 @@
-# url-shortener
-Hobby application for URL shortening (something like bitly.com)
+# URL shortener
+
+## Project setup
+```
+npm install
+```
+
+### Run the application
+```
+npm run dev
+```
