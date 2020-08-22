@@ -77,3 +77,6 @@ dist
 
 # IDE
 .idea
+
+# Localhost
+docker/mongo

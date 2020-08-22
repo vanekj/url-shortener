@@ -2,6 +2,15 @@ version: '3'
 
 services:
 
+  # Mongo container
+  mongo:
+    image: mongo
+    container_name: mongo
+    volumes:
+      - ./docker/mongo/db:/data/db
+    ports:
+      - 27017:27017
+
   # Application container
   app:
     image: node:12-alpine
@@ -14,3 +23,7 @@ services:
     ports:
       - 8080:8080
     command: "npm run dev"
+    links:
+      - mongo
+    depends_on:
+      - mongo
