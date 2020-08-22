@@ -22,7 +22,8 @@ module.exports = {
 		'@nuxtjs/axios'
 	],
 	plugins: [
-		'@/plugins/filters.js'
+		'@/plugins/axios',
+		'@/plugins/filters'
 	],
 	srcDir: './app/shared'
 };
