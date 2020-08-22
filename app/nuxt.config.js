@@ -14,11 +14,15 @@ module.exports = {
 		],
 		link: [
 			{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+			{ rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css' },
 			{ rel: 'stylesheet', href: 'https://use.fontawesome.com/releases/v5.2.0/css/all.css' }
 		]
 	},
 	modules: [
-		'nuxt-buefy'
+		'@nuxtjs/axios'
+	],
+	plugins: [
+		'@/plugins/filters.js'
 	],
 	srcDir: './app/shared'
 };
