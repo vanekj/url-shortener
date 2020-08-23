@@ -45,7 +45,10 @@ const apiRouter = require('./router/api'),
 	app.use((request, response, next) => {
 		response.locals.models = models;
 		response.locals.session = request.cookies.session || nanoid(20);
-		response.cookie('session', response.locals.session);
+		response.cookie('session', response.locals.session, {
+			maxAge: 31556952000, // 1 year
+			httpOnly: true
+		});
 		next();
 	});
 
