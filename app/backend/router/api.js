@@ -1,6 +1,8 @@
 const express = require('express'),
 	{ customAlphabet } = require('nanoid');
 
+const linkSchema = require('../schema/link');
+
 /**
  * Create API router
  * @returns {Object} Express API router
@@ -17,7 +19,7 @@ module.exports = () => {
 			originalUrl: request.body.originalUrl,
 			session: response.locals.session
 		});
-		response.json(createdLink);
+		response.json(linkSchema(createdLink));
 	});
 
 	// Get all links for session
@@ -27,7 +29,7 @@ module.exports = () => {
 		}).sort({
 			createdAt: 'descending'
 		});
-		response.json(foundLinks);
+		response.json(foundLinks.map(linkSchema));
 	});
 
 	// Return API router
