@@ -10,7 +10,8 @@
 		"lint:js": "eslint app/**/*.{js,vue}",
 		"lint:css": "stylelint app/**/*.{css,vue}",
 		"lint": "npm run lint:js && npm run lint:css",
-		"dev": "nodemon ./app/backend/server.js",
+		"dev": "docker-compose up --build",
+		"serve": "nodemon ./app/backend/server.js",
 		"build": "nuxt build -c ./app/nuxt.config.js",
 		"start": "node ./app/backend/server.js"
 	},
