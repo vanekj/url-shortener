@@ -1,104 +1,64 @@
-const path = require('path'),
-	http = require('http');
-
 const express = require('express'),
 	compression = require('compression'),
 	cookieParser = require('cookie-parser'),
-	{ Nuxt, Builder } = require('nuxt'),
-	{ customAlphabet, nanoid } = require('nanoid');
+	{ nanoid } = require('nanoid');
 
 const config = require('./config'),
 	nuxtConfig = require('../nuxt.config');
 
-const link = require('./database/Link');
+const connectDatabase = require('./util/connectDatabase'),
+	loadDatabaseModels = require('./util/loadDatabaseModels'),
+	createApplication = require('./util/createApplication'),
+	createNuxtApplication = require('./util/createNuxtApplication'),
+	createServer = require('./util/createServer');
+
+const apiRouter = require('./router/api'),
+	applicationRouter = require('./router/application');
 
 (async () => {
-	// Set nuxt config dev
-	nuxtConfig.dev = config.isDevelopment;
 
-	// Initiate services
-	let app = express(),
-		nuxt = new Nuxt(nuxtConfig);
+	// Connect Mongo database
+	let database = await connectDatabase(config.mongoUri);
 
-	// If development, run Nuxt builder
-	if (nuxtConfig.dev) {
-		await new Builder(nuxt).build();
-	}
+	// Load Mongo database models
+	let models = loadDatabaseModels(database);
 
-	// Enable gzip compression
+	// Create Nuxt application
+	let nuxt = await createNuxtApplication(nuxtConfig, config);
+
+	// Create Express application with middlewares
+	let app = createApplication(config.staticPath);
+
+	// Use compression middleware
 	app.use(compression());
 
-	// Enable JSON parser
-	app.use(express.json());
+	// Use static path middleware
+	app.use(express.static(config.staticPath));
 
-	// Enable cookie parser
+	// Use cookie parser middleware
 	app.use(cookieParser());
 
-	// Enable static middleware
-	app.use(express.static(path.join(__dirname, '../shared/static')));
+	// Use JSON parser middleware
+	app.use(express.json());
 
-	// Attach variables into response locals
+	// Store additional response attributes
 	app.use((request, response, next) => {
+		response.locals.models = models;
 		response.locals.session = request.cookies.session || nanoid(20);
 		response.cookie('session', response.locals.session);
 		next();
 	});
 
-	// Get link detail
-	app.get('/api/link/:hash', async (request, response) => {
-		let foundLink = await link.find({
-			hash: request.params.hash
-		});
-		response.json(foundLink);
-	});
+	// Use API router
+	app.use('/api', apiRouter());
 
-	// Create shortened link
-	app.post('/api/link', async (request, response) => {
-		let createdLink = await link.create({
-			hash: customAlphabet('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', 10)(),
-			originalUrl: request.body.originalUrl,
-			session: response.locals.session
-		});
-		response.json(createdLink);
-	});
-
-	// Get all links for session
-	app.get('/api/link', async (request, response) => {
-		let foundLinks = await link.find({
-			session: response.locals.session
-		}).sort({
-			createdAt: 'descending'
-		});
-		response.json(foundLinks);
-	});
-
-	// Create redirect on shortened link use
-	app.get('/:hash', async (request, response, next) => {
-		let foundLink = request.params.hash && await link.findOne(request.params);
-		if (foundLink) {
-			await link.updateOne({
-				hash: foundLink.hash
-			}, {
-				$inc: {
-					views: 1
-				}
-			});
-			response.redirect(302, foundLink.originalUrl);
-		} else {
-			next();
-		}
-	});
+	// Use application router
+	app.use(applicationRouter());
 
 	// Use Nuxt middleware
 	app.use(nuxt.render);
 
-	// Create HTTP web server
-	http.createServer(app).listen(config.port, (error) => {
-		if (error) {
-			console.log('Error while starting the HTTP server', error);
-			process.exit(1);
-		} else {
-			console.log(`HTTP server running on http://localhost:${config.port}`);
-		}
-	});
+	// Create HTTP server
+	createServer(app, config.port);
+
 })();

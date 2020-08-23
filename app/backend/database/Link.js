@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-const config = require('../config');
-
 const linkSchema = new mongoose.Schema({
 	hash: {
 		type: String,
@@ -27,4 +25,6 @@ const linkSchema = new mongoose.Schema({
 	}
 });
 
-module.exports = config.mongoConnection.model('Link', linkSchema);
+module.exports = (database) => ({
+	link: database.model('Link', linkSchema)
+});
