@@ -1,6 +1,6 @@
 # URL shortener
 
-Hobby application to play with Express, Nuxt and MongoDB. It creates shorthands for long URLs, somethink like Bitly does, and redirects back to the original URL when hashed URL is opened.
+Hobby application to play with Express, Nuxt and MongoDB. It creates shorthands for long URLs, something like [Bitly](https://bitly.com) does, and redirects back to the original URL when hashed URL is opened.
 
 Application is hosted on [Heroku](https://www.heroku.com) and Mongo database is on free plan of [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
 
