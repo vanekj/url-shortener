@@ -6,7 +6,6 @@ const config = require('./config'),
 	nuxtConfig = require('../nuxt.config');
 
 const connectDatabase = require('./util/connectDatabase'),
-	createApplication = require('./util/createApplication'),
 	createNuxtApplication = require('./util/createNuxtApplication');
 
 const sessionMiddleware = require('./middleware/session');
@@ -22,8 +21,8 @@ const apiRouter = require('./router/api'),
 	// Create Nuxt application
 	let nuxt = await createNuxtApplication(nuxtConfig, config);
 
-	// Create Express application with middlewares
-	let app = createApplication(config.staticPath);
+	// Create Express application
+	let app = express();
 
 	// Use compression middleware
 	app.use(compression());
