@@ -5,8 +5,5 @@ const express = require('express');
  * @returns {Object} Created Express application
  */
 module.exports = () => {
-	// Create Express application
-	let app = express();
-	// Return created application
-	return app;
+	return express();
 };

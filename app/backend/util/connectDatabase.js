@@ -5,13 +5,10 @@ const mongoose = require('mongoose');
  * @param {String} mongoUri Mongo database connection URI
  * @returns {Promise} Mongoose connection instance
  */
-module.exports = async (mongoUri) => {
-	// Connect to Mongo database
-	let connection = await mongoose.connect(mongoUri, {
+module.exports = (mongoUri) => {
+	return mongoose.connect(mongoUri, {
 		useCreateIndex: true,
 		useNewUrlParser: true,
 		useUnifiedTopology: true
 	});
-	// Return the connection
-	return connection;
 };
