@@ -40,10 +40,10 @@ const apiRouter = require('./router/api'),
 	app.use(sessionMiddleware);
 
 	// Use API router
-	app.use('/api', apiRouter());
+	app.use('/api', apiRouter);
 
 	// Use application router
-	app.use(applicationRouter());
+	app.use(applicationRouter);
 
 	// Use Nuxt middleware
 	app.use(nuxt.render);
