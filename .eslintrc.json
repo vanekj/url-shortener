@@ -260,7 +260,7 @@
 			"warn",
 			"never"
 		],
-		"new-cap": "error",
+		"new-cap": "off",
 		"new-parens": "error",
 		"newline-per-chained-call": "off",
 		"no-array-constructor": "error",
