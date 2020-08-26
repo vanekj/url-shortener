@@ -1,5 +1,7 @@
 const express = require('express');
 
+const link = require('../model/link');
+
 /**
  * Create application router
  * @returns {Object} Express application router
@@ -7,13 +9,13 @@ const express = require('express');
 module.exports = () => {
 
 	// Create application router
-	const applicationRouter = express.Router(); // eslint-disable-line new-cap
+	const applicationRouter = express.Router();
 
 	// Redirect to the original URL when hash is present
 	applicationRouter.get('/:hash', async (request, response, next) => {
-		let foundLink = request.params.hash && await response.locals.models.link.findOne(request.params);
+		let foundLink = request.params.hash && await link.findOne(request.params);
 		if (foundLink) {
-			await response.locals.models.link.updateOne({
+			await link.updateOne({
 				hash: foundLink.hash
 			}, {
 				$inc: {
