@@ -7,8 +7,7 @@ const config = require('./config'),
 
 const connectDatabase = require('./util/connectDatabase'),
 	createApplication = require('./util/createApplication'),
-	createNuxtApplication = require('./util/createNuxtApplication'),
-	createServer = require('./util/createServer');
+	createNuxtApplication = require('./util/createNuxtApplication');
 
 const sessionMiddleware = require('./middleware/session');
 
@@ -38,8 +37,8 @@ const apiRouter = require('./router/api'),
 	// Use JSON parser middleware
 	app.use(express.json());
 
-	// Create session cookie
-	app.use(sessionMiddleware());
+	// Use session cookie middleware
+	app.use(sessionMiddleware);
 
 	// Use API router
 	app.use('/api', apiRouter());
@@ -51,6 +50,6 @@ const apiRouter = require('./router/api'),
 	app.use(nuxt.render);
 
 	// Create HTTP server
-	createServer(app, config.port);
+	app.listen(config.port);
 
 })();
