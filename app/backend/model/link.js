@@ -25,6 +25,4 @@ const linkSchema = new mongoose.Schema({
 	}
 });
 
-module.exports = (database) => ({
-	link: database.model('Link', linkSchema)
-});
+module.exports = mongoose.model('Link', linkSchema);
