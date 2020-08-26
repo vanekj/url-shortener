@@ -4,11 +4,12 @@ const { Nuxt, Builder } = require('nuxt');
  * Create Nuxt application
  * @param {Object} nuxtConfig Nuxt configuration
  * @param {Object} serverConfig Server configuration
+ * @param {Boolean} serverConfig.isDevelopment True if current environment is DEV
  * @returns {Promise} Resolved when Nuxt is ready
  */
-module.exports = async (nuxtConfig, serverConfig) => {
+module.exports = async (nuxtConfig, { isDevelopment } = {}) => {
 	// Set nuxt into DEV mode (if we are on development)
-	nuxtConfig.dev = serverConfig.isDevelopment;
+	nuxtConfig.dev = isDevelopment;
 	// Create Nuxt instance
 	let nuxt = new Nuxt(nuxtConfig);
 	// If we are on development, run Nuxt builder
